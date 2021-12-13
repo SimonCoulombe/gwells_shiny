@@ -5,9 +5,36 @@ Authors@R: person('Simon', 'Coulombe', email = 'simoncoulombe@protonmail.com', r
 Description: This package is built on {golem} and allows QAQC of gwells data
 License: What license is it under?
 Imports: 
+    attempt,
     config (>= 0.3.1),
+    DBI,
+    dplyr,
+    DT,
+    ggplot2,
+    glue,
     golem (>= 0.3.1),
+    htmltools,
+    mapview,
+    processx,
+    profvis,
+    renv,
+    RPostgreSQL,
+    sf,
     shiny (>= 1.6.0)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
+Suggests: 
+    spelling,
+    testthat (>= 3.0.0)
+    bcdata,
+    bcmaps,
+    usethis,
+    sf,
+    readxl
+Remotes:
+    bcgov/bcdata,
+    bcgov/bcmaps,
+    rstudio/flexdashboard    
+Config/testthat/edition: 3
+Language: en-US

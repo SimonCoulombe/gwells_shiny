@@ -15,7 +15,16 @@
 
 ## Dependencies ----
 ## Add one line by package you want to add as dependency
-usethis::use_package( "thinkr" )
+usethis::use_package( "dplyr" )
+usethis::use_package( "DBI" )
+usethis::use_package( "RPostgreSQL" )
+usethis::use_package( "renv" )
+usethis::use_package( "sf" )
+usethis::use_package( "mapview" )
+usethis::use_package( "ggplot2" )
+usethis::use_package( "attempt" )
+usethis::use_package( "profvis" )
+
 
 ## Add modules ----
 ## Create a module infrastructure in R/
