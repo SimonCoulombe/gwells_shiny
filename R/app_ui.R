@@ -5,12 +5,36 @@
 #' @import shiny
 #' @noRd
 app_ui <- function(request) {
+  suppressPackageStartupMessages({
+    library(DBI)
+    library(RPostgres)
+  })
+  
+  Sys.setenv(TZ="America/Vancouver")
+  BCGOV_DB <- Sys.getenv("BCGOV_DB")
+  BCGOV_HOST <- Sys.getenv("BCGOV_HOST")
+  BCGOV_USR <- Sys.getenv("BCGOV_USR")
+  BCGOV_PWD <- Sys.getenv("BCGOV_PWD")
+  if (is.null(BCGOV_DB) || is.null(BCGOV_HOST)|| is.null(BCGOV_USR) || is.null(BCGOV_PWD)) stop("go away")
+  
+  con1 <- DBI::dbConnect(
+    RPostgres::Postgres(),
+    dbname = BCGOV_DB,
+    host = BCGOV_HOST,
+    user = BCGOV_USR,
+    password= BCGOV_PWD
+  )
+  
+  
+  
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # Your application UI logic 
     fluidPage(
-      h1("gwells_shiny")
+      selectInput("dataset", label = "Dataset", choices = ls("package:datasets")),
+      verbatimTextOutput("summary"),
+      tableOutput("table")
     )
   )
 }
@@ -28,7 +52,7 @@ golem_add_external_resources <- function(){
   add_resource_path(
     'www', app_sys('app/www')
   )
- 
+  
   tags$head(
     favicon(),
     bundle_resources(

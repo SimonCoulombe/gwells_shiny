@@ -1,42 +1,47 @@
-Package: gwells_shiny
+Package: gwellsshiny
 Title: A shiny app for GWELLS QAQC
 Version: 0.0.0.9000
 Authors@R: person('Simon', 'Coulombe', email = 'simoncoulombe@protonmail.com', role = c('cre', 'aut'))
 Description: This package is built on {golem} and allows QAQC of gwells data
 License: What license is it under?
 Imports: 
+    assertthat,
     attempt,
+    bcmaps,
+    bit64,
     config (>= 0.3.1),
     DBI,
+    dbplyr,
     dplyr,
     DT,
+    forcats,
     ggplot2,
+    ggplotly,
     glue,
     golem (>= 0.3.1),
+    gt,
+    hrbrthemes,
     htmltools,
+    lubridate,
     mapview,
+    pkgload,
+    plotly,
+    pool,
     processx,
     profvis,
     renv,
-    RPostgreSQL,
+    RPostgres,
     sf,
-    shiny (>= 1.6.0)
+    shiny (>= 1.6.0),
+    stringr,
+    tidyr,
+    whoami
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Suggests: 
     spelling,
     testthat (>= 3.0.0)
-    bcdata,
-    bcmaps,
-    usethis,
-    sf,
-    readxl
-Remotes:
-    bcgov/bcdata,
-    bcgov/bcmaps,
-    rstudio/flexdashboard    
-Config/testthat/edition: 3
 Language: en-US
 URL: https://github.com/SimonCoulombe/gwells_shiny
 BugReports: https://github.com/SimonCoulombe/gwells_shiny/issues

@@ -17,14 +17,35 @@
 ## Add one line by package you want to add as dependency
 usethis::use_package( "dplyr" )
 usethis::use_package( "DBI" )
-usethis::use_package( "RPostgreSQL" )
+usethis::use_package( "RPostgres" )
 usethis::use_package( "renv" )
+usethis::use_package( "usethis" )
+usethis::use_package( "devtools" )
+usethis::use_package( "forcats" )
 usethis::use_package( "sf" )
+usethis::use_package( "pool" )
 usethis::use_package( "mapview" )
 usethis::use_package( "ggplot2" )
 usethis::use_package( "attempt" )
 usethis::use_package( "profvis" )
+usethis::use_package( "assertthat" )
+usethis::use_package( "bit64" )
+usethis::use_package( "stringr" )
+usethis::use_package( "dbplyr" )
+usethis::use_package( "tzdb" )
+usethis::use_package( "bcmaps" )
+usethis::use_package( "bcdata" )
+usethis::use_package( "lubridate" )
+usethis::use_package( "whoami" )
+usethis::use_package( "hrbrthemes" )
+usethis::use_package( "plotly" )
+usethis::use_package( "tidyr" )
+usethis::use_package( "gt" )
+usethis::use_package( "glue" )
 
+
+# devtools::install() ## simon 
+# renv::snapshot(type = "explicit") # simon
 
 ## Add modules ----
 ## Create a module infrastructure in R/
