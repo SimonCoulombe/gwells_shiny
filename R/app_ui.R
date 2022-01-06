@@ -5,36 +5,77 @@
 #' @import shiny
 #' @noRd
 app_ui <- function(request) {
+  
+  bc_template_footer <- column(
+    width = 12,
+    style = "background-color:#003366; border-top:2px solid #fcba19;",
+    tags$footer(
+      class="footer",
+      tags$div(
+        class="container", style="display:flex; justify-content:center; flex-direction:column; text-align:center; height:46px;",
+        tags$ul(
+          style="display:flex; flex-direction:row; flex-wrap:wrap; margin:0; list-style:none; align-items:center; height:100%;",
+          tags$li(a(href="https://www2.gov.bc.ca/gov/content/home", "Home", style="font-size:1em; font-weight:normal; color:white; padding-left:5px; padding-right:5px; border-right:1px solid #4b5e7e;")),
+          tags$li(a(href="https://www2.gov.bc.ca/gov/content/home/disclaimer", "Disclaimer", style="font-size:1em; font-weight:normal; color:white; padding-left:5px; padding-right:5px; border-right:1px solid #4b5e7e;")),
+          tags$li(a(href="https://www2.gov.bc.ca/gov/content/home/privacy", "Privacy", style="font-size:1em; font-weight:normal; color:white; padding-left:5px; padding-right:5px; border-right:1px solid #4b5e7e;")),
+          tags$li(a(href="https://www2.gov.bc.ca/gov/content/home/accessibility", "Accessibility", style="font-size:1em; font-weight:normal; color:white; padding-left:5px; padding-right:5px; border-right:1px solid #4b5e7e;")),
+          tags$li(a(href="https://www2.gov.bc.ca/gov/content/home/copyright", "Copyright", style="font-size:1em; font-weight:normal; color:white; padding-left:5px; padding-right:5px; border-right:1px solid #4b5e7e;")),
+          tags$li(a(href="https://www2.gov.bc.ca/StaticWebResources/static/gov3/html/contact-us.html", "Contact", style="font-size:1em; font-weight:normal; color:white; padding-left:5px; padding-right:5px; border-right:1px solid #4b5e7e;"))
+        )
+      )
+    )
+  )
+  
   suppressPackageStartupMessages({
     library(DBI)
     library(RPostgres)
   })
   
-  Sys.setenv(TZ="America/Vancouver")
-  BCGOV_DB <- Sys.getenv("BCGOV_DB")
-  BCGOV_HOST <- Sys.getenv("BCGOV_HOST")
-  BCGOV_USR <- Sys.getenv("BCGOV_USR")
-  BCGOV_PWD <- Sys.getenv("BCGOV_PWD")
-  if (is.null(BCGOV_DB) || is.null(BCGOV_HOST)|| is.null(BCGOV_USR) || is.null(BCGOV_PWD)) stop("go away")
-  
-  con1 <- DBI::dbConnect(
-    RPostgres::Postgres(),
-    dbname = BCGOV_DB,
-    host = BCGOV_HOST,
-    user = BCGOV_USR,
-    password= BCGOV_PWD
-  )
-  
-  
-  
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
+    
+    
     # Your application UI logic 
+    # fluidPage(
+    #   selectInput("dataset", label = "Dataset", choices = ls("package:datasets")),
+    #   verbatimTextOutput("summary"),
+    #   tableOutput("table")
+    # )
+    
+    #fluidpage de exemple
     fluidPage(
       selectInput("dataset", label = "Dataset", choices = ls("package:datasets")),
-      verbatimTextOutput("summary"),
-      tableOutput("table")
+      
+      navbarPage(
+        title = "text wide as the bc logo", theme = "bcgov.css", 
+        tabPanel(
+          "1 summary", 
+          sidebarLayout(
+            sidebarPanel(
+              helpText("help text1"),
+              img(src = "www/Ecoprovinces_Title.png", height = 1861*1/5, width = 1993*1/5),
+            ),    
+            mainPanel(
+              verbatimTextOutput("summary"),
+            )
+          ),
+          bc_template_footer
+        ),        
+        tabPanel(
+          "2 table", 
+          sidebarLayout(
+            sidebarPanel(
+              helpText("helptext2"),
+              #img(src = "www/Ecoprovinces_Title.png", height = 1861*1/5, width = 1993*1/5),
+            ),    
+            mainPanel(
+              tableOutput("table")
+            )
+          ),
+          bc_template_footer
+        )
+      )
     )
   )
 }

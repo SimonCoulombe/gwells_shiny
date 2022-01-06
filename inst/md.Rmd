@@ -208,11 +208,6 @@ z <- full_data %>%
   mutate(
     fct_well_class_code = factor(well_class_code, levels = c("WATR_SPPLY", "UNK", "MONITOR", "DEW_DRA", "CLS_LP_GEO" ,"GEOTECH" ,"REMEDIATE" ,"INJECTION", "RECHARGE"))
   )
-
-
-
-
-
 ```
 
 
