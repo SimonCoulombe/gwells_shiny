@@ -19,6 +19,9 @@ Repo to host the actual shiny app developed for gwells qaqc.
  stackoverflow
  https://stackoverflow.com/questions/58265749/how-can-i-make-a-dockerized-shiny-app-in-a-flexdashboard-wrapper-with-golem
 
+# BC Shiny Template  
+
+Downloaded here : https://github.com/bcgov/ensemble-app-CMIP5
 
 # File naming conventions   
 

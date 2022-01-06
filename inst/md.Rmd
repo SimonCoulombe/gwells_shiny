@@ -139,6 +139,15 @@ z <- full_data %>%
     cross_referenced = replace_na(stringr::str_detect(comments, "xref|x-ref|cross ref|cross-ref"), FALSE),
     
     max_date = pmax(coalesce(construction_start_date, construction_end_date, alteration_start_date, alteration_end_date, decommission_start_date, decommission_end_date)),
+    worktype = factor(case_when(
+      decommission_start_date == max_date | decommission_end_date == max_date ~ "decommission",
+      alteration_start_date == max_date | alteration_end_date == max_date ~ "alteration",
+      construction_start_date == max_date | construction_end_date == max_date ~ "construction",
+      TRUE ~ "no date"
+      
+      
+      ), levels = c("construction", "alteration", "decommission", "no date")
+      ),
     old_or_unknown_date = max_date < lubridate::ymd("20160301") | is.na(max_date), 
     
     my_well_type = case_when(
@@ -175,8 +184,8 @@ z <- full_data %>%
     
     table2_flag = case_when(
       distance_to_matching_pid >400 ~ TRUE,
-      0< score_address < 80 ~ TRUE,
-      0 <score_city < 0 ~ TRUE,
+      0< score_address & score_address < 80 ~ TRUE,
+      0 <score_city ~ TRUE,
       TRUE ~ FALSE
     ),
     table3_missing_lat_long_flag =  case_when(
@@ -201,23 +210,9 @@ z <- full_data %>%
   )
 
 
-worktype_order <- tibble(
-  worktype = c("construction","alteration", "decommission"), worktype_order = c(1,2,3)
-)
-### this step is slow..  should try and make faster..
-zzzz <- full_data %>% 
-  select(well_tag_number, contains("start_date"), contains("end_date")) %>%
-  gather(key=key, value=date, -well_tag_number) %>%
-  separate(key, sep ="_", into  = "worktype", extra = "drop") %>% 
-  left_join(worktype_order) %>% 
-  filter(!is.na(date)) %>% 
-  group_by(well_tag_number) %>% 
-  filter(date == max(date)) %>% 
-  arrange(desc(worktype_order)) %>%
-  slice(1) %>%
-  ungroup()
 
-z <- z %>% left_join(zzzz %>% select(well_tag_number, worktype))
+
+
 ```
 
 
