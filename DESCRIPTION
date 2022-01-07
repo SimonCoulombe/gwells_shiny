@@ -32,8 +32,10 @@ Imports:
     RPostgres,
     sf,
     shiny (>= 1.6.0),
+    shinyWidgets,
     stringr,
     tidyr,
+    waiter,
     whoami
 Encoding: UTF-8
 LazyData: true

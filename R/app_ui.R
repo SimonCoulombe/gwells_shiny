@@ -45,8 +45,33 @@ app_ui <- function(request) {
     
     #fluidpage de exemple
     fluidPage(
-      selectInput("dataset", label = "Dataset", choices = ls("package:datasets")),
+      #selectInput("dataset", label = "Dataset", choices = ls("package:datasets")),
       
+      fluidRow(
+        column(5,
+               shinyWidgets::numericRangeInput(
+                 inputId = "well_tag_number_range", 
+                 label = "Well tag number range:",
+                 value = c(1, 999999)
+               )
+        ),
+        column(5,
+               dateRangeInput("date_range", "Date range:",
+                              start  =  Sys.Date()-13,
+                              end    =  Sys.Date(),
+                              min    = "2021-12-13",
+                              max    = Sys.Date(),
+                              #format = "mm/dd/yy",
+                              #separator = " - "
+               )
+        ),
+        column(2,
+               actionButton("recalc", "Get me home!", 
+                            icon("circle-check"),
+                            
+                            style="color: #101010; background-color: #4b5e7e; border-color: #101010")
+        )
+      ),
       navbarPage(
         title = "text wide as the bc logo", theme = "bcgov.css", 
         tabPanel(
@@ -57,7 +82,7 @@ app_ui <- function(request) {
               img(src = "www/Ecoprovinces_Title.png", height = 1861*1/5, width = 1993*1/5),
             ),    
             mainPanel(
-              verbatimTextOutput("summary"),
+              #verbatimTextOutput("summary"),
             )
           ),
           bc_template_footer
@@ -70,7 +95,10 @@ app_ui <- function(request) {
               #img(src = "www/Ecoprovinces_Title.png", height = 1861*1/5, width = 1993*1/5),
             ),    
             mainPanel(
-              tableOutput("table")
+
+                #tableOutput("table")
+                DT::dataTableOutput("table1")
+
             )
           ),
           bc_template_footer

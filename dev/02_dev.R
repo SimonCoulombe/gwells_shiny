@@ -42,7 +42,8 @@ usethis::use_package( "plotly" )
 usethis::use_package( "tidyr" )
 usethis::use_package( "gt" )
 usethis::use_package( "glue" )
-
+usethis::use_package( "shinyWidgets" ) # for numeric range input
+usethis::use_package( "waiter" ) # for loading screen
 
 # devtools::install() ## simon 
 # renv::snapshot(type = "explicit") # simon
