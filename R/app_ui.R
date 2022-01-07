@@ -61,7 +61,7 @@ app_ui <- function(request) {
                               #separator = " - "
                )
         ),
-        column(2, actionButton("simulate", "Simulate!")
+        column(2, actionButton("generate", "Generate tables and figures")
                #actionButton(
                 # "update_filters", "Update filters"#, 
                  #icon("circle-check"),

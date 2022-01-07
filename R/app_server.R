@@ -37,7 +37,7 @@ app_server <- function(input, output, session) {
   
   waiter_hide() # hide the waiter
   
-  x1 <- eventReactive(input$simulate,{
+  x1 <- eventReactive(input$generate,{
     z %>%
       dplyr::filter(date_added >= input$date_range[1] & 
                       date_added <= input$date_range[2] &
