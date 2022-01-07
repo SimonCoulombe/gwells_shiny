@@ -26,10 +26,6 @@ app_ui <- function(request) {
     )
   )
   
-  suppressPackageStartupMessages({
-    library(DBI)
-    library(RPostgres)
-  })
   
   tagList(
     # Leave this function for adding external resources
@@ -46,7 +42,7 @@ app_ui <- function(request) {
     #fluidpage de exemple
     fluidPage(
       #selectInput("dataset", label = "Dataset", choices = ls("package:datasets")),
-      
+      useWaiter(),
       fluidRow(
         column(5,
                shinyWidgets::numericRangeInput(
@@ -65,11 +61,12 @@ app_ui <- function(request) {
                               #separator = " - "
                )
         ),
-        column(2,
-               actionButton("recalc", "Get me home!", 
-                            icon("circle-check"),
-                            
-                            style="color: #101010; background-color: #4b5e7e; border-color: #101010")
+        column(2, actionButton("simulate", "Simulate!")
+               #actionButton(
+                # "update_filters", "Update filters"#, 
+                 #icon("circle-check"),
+                 #style="color: #101010; background-color: #4b5e7e; border-color: #101010"
+               #)
         )
       ),
       navbarPage(
@@ -95,10 +92,10 @@ app_ui <- function(request) {
               #img(src = "www/Ecoprovinces_Title.png", height = 1861*1/5, width = 1993*1/5),
             ),    
             mainPanel(
-
-                #tableOutput("table")
-                DT::dataTableOutput("table1")
-
+              
+              #tableOutput("table")
+              DT::dataTableOutput("table1")
+              
             )
           ),
           bc_template_footer

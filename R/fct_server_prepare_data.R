@@ -6,7 +6,6 @@ prepare_data <- function(start_date, end_date,  start_well_tag_number, end_well_
   wells <- dbGetQuery(connection, 
                       paste0("select * FROM  wells WHERE date_added >= '", start_date, "' and date_added <='", end_date,"' and well_tag_number >=", start_well_tag_number, " and well_tag_number <=", end_well_tag_number)
   )
-  
   my_wtn <- wells$well_tag_number
   message("download geocode")
   geocode <- dbGetQuery(connection, 
@@ -16,7 +15,6 @@ prepare_data <- function(start_date, end_date,  start_well_tag_number, end_well_
   qa <- dbGetQuery(connection, 
                    paste0("select * FROM  wells_qa WHERE well_tag_number IN (", paste0(my_wtn, collapse = ","), ")")
   )
-  
   # 
   # drilling_method <- dbGetQuery(connection, 
   #                               paste0("select well_tag_number,drilling_method_code  from drilling_method WHERE well_tag_number IN (", paste0(my_wtn, collapse = ","), ")")
@@ -48,9 +46,9 @@ prepare_data <- function(start_date, end_date,  start_well_tag_number, end_well_
   full_data <- wells %>% 
     dplyr::left_join(geocode) %>% 
     dplyr::left_join(qa %>% dplyr::select(-dplyr::all_of(colnames_in_more_than_one_db))) # %>%
-    #dplyr::left_join(drilling_method_summary) #%>%
-    #filter(date_added >= start_date, date_added <= end_date)
-
+  #dplyr::left_join(drilling_method_summary) #%>%
+  #filter(date_added >= start_date, date_added <= end_date)
+  
   interesting_columns <- c("well_tag_number", "identification_plate_number", 
                            "date_added", "date_geocoded", "date_qa",
                            "construction_start_date", "construction_end_date",    
@@ -62,7 +60,7 @@ prepare_data <- function(start_date, end_date,  start_well_tag_number, end_well_
                            "finished_well_depth_ft_bgl" , "person_responsible", "company_of_person_responsible",
                            "artesian_conditions", "comments",
                            "nr_region_name")
-
+  
   
   z <- full_data %>%
     dplyr::mutate(
@@ -141,7 +139,7 @@ prepare_data <- function(start_date, end_date,  start_well_tag_number, end_well_
   
   
   return(z)  
-
+  
 }
 
 
@@ -195,7 +193,7 @@ prepare_all_data <- function(connection){
   full_data <- wells %>% 
     dplyr::left_join(geocode) %>% 
     dplyr::left_join(qa %>% dplyr::select(-dplyr::all_of(colnames_in_more_than_one_db))) # %>%
-    #dplyr::left_join(drilling_method_summary)
+  #dplyr::left_join(drilling_method_summary)
   message("done joining")
   interesting_columns <- c("well_tag_number", "identification_plate_number", 
                            "date_added", "date_geocoded", "date_qa",
