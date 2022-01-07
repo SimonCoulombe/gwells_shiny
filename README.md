@@ -62,3 +62,5 @@ to stick to a formalized pattern as much as possible.
     Apps](https://engineering-shiny.org/) (2021) by Colin Fay & al
 -   [Mastering Shiny](https://mastering-shiny.org/) (2020) by Hadley
     wickham
+-   [think client app](https://github.com/ThinkR-open/clientapp/) hosted
+    [here](https://connect.thinkr.fr/clientapp/)
