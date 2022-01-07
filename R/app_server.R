@@ -39,15 +39,8 @@ app_server <- function(input, output, session) {
   
   waiter_hide() # hide the waiter
   
-  selected <- eventReactive(input$generate,{
-    message("event reactive selected")
-    z %>%
-      dplyr::filter(date_added >= input$date_range[1] & 
-                      date_added <= input$date_range[2] &
-                      well_tag_number >= input$well_tag_number_range[1] &
-                      well_tag_number <= input$well_tag_number_range[2])
-  })
-
+  
+  selected <- mod_filterData_server("filterData_ui_1",z )
 
   
   table1_title <- eventReactive(selected(),

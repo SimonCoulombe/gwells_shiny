@@ -9,17 +9,8 @@ app_ui <- function(request) {
     # Leave this function for adding external resources
     golem_add_external_resources(),
     
-    
-    # Your application UI logic 
-    # fluidPage(
-    #   selectInput("dataset", label = "Dataset", choices = ls("package:datasets")),
-    #   verbatimTextOutput("summary"),
-    #   tableOutput("table")
-    # )
-    
     #fluidpage de exemple
     fluidPage(
-      #selectInput("dataset", label = "Dataset", choices = ls("package:datasets")),
       useWaiter(),
       
       tags$style(".glyphicon-ok-sign {color:#2b8ee5}
@@ -28,22 +19,26 @@ app_ui <- function(request) {
               .glyphicon-flag, .glyphicon-trash {color:#28b728}"),
       
       fluidRow(
-        column(4,
-               shinyWidgets::numericRangeInput(
-                 inputId = "well_tag_number_range", 
-                 label = "Well tag number range:",
-                 value = c(1, 999999)
-               )
-        ),
-        column(4,
-               dateRangeInput("date_range", "Date range:",
-                              start  =  Sys.Date()-13,
-                              end    =  Sys.Date(),
-                              min    = "2021-12-13",
-                              max    = Sys.Date()
-               )
-        ),
-        column(4, actionButton("generate", "Generate tables and figures"))
+        column(12,mod_filterData_ui("filterData_ui_1"))
+
+        
+        #         column(4,
+        #        shinyWidgets::numericRangeInput(
+        #          inputId = "well_tag_number_range", 
+        #          label = "Well tag number range:",
+        #          value = c(1, 999999)
+        #        )
+        # ),
+        # column(4,
+        #        dateRangeInput(
+        #          "date_range", "Date range:",
+        #          start  =  Sys.Date()-13,
+        #          end    =  Sys.Date(),
+        #          min    = "2021-12-13",
+        #          max    = Sys.Date()
+        #        )
+        # ),
+        # column(4, actionButton("generate", "Generate tables and figures"))
       ),
       navbarPage(
         title = "text as wide as the logo", theme = "bcgov.css", 
@@ -57,21 +52,6 @@ app_ui <- function(request) {
             mainPanel(
               width=10,
               DT::dataTableOutput("table1")
-            )
-          ),
-          bc_template_footer
-        ),
-        tabPanel(
-          "2 image", 
-          sidebarLayout(
-            sidebarPanel(
-              width = 2,
-              helpText("help text2"),
-              img(src = "www/Ecoprovinces_Title.png", height = 1861*1/5, width = 1993*1/5),
-            ),    
-            mainPanel(
-              width = 10,
-              #verbatimTextOutput("summary"),
             )
           ),
           bc_template_footer
