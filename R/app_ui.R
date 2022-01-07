@@ -5,7 +5,6 @@
 #' @import shiny
 #' @noRd
 app_ui <- function(request) {
-  
   bc_template_footer <- column(
     width = 12,
     style = "background-color:#003366; border-top:2px solid #fcba19;",
@@ -43,63 +42,62 @@ app_ui <- function(request) {
     fluidPage(
       #selectInput("dataset", label = "Dataset", choices = ls("package:datasets")),
       useWaiter(),
+      
+      tags$style(".glyphicon-ok-sign {color:#2b8ee5}
+              .glyphicon-question-sign {color:#f4e107}
+              .glyphicon-exclamation-sign {color:#e5413b}
+              .glyphicon-flag, .glyphicon-trash {color:#28b728}"),
+      
       fluidRow(
-        column(5,
+        column(4,
                shinyWidgets::numericRangeInput(
                  inputId = "well_tag_number_range", 
                  label = "Well tag number range:",
                  value = c(1, 999999)
                )
         ),
-        column(5,
+        column(4,
                dateRangeInput("date_range", "Date range:",
                               start  =  Sys.Date()-13,
                               end    =  Sys.Date(),
                               min    = "2021-12-13",
-                              max    = Sys.Date(),
-                              #format = "mm/dd/yy",
-                              #separator = " - "
+                              max    = Sys.Date()
                )
         ),
-        column(2, actionButton("generate", "Generate tables and figures")
-               #actionButton(
-                # "update_filters", "Update filters"#, 
-                 #icon("circle-check"),
-                 #style="color: #101010; background-color: #4b5e7e; border-color: #101010"
-               #)
-        )
+        column(4, actionButton("generate", "Generate tables and figures"))
       ),
       navbarPage(
-        title = "text wide as the bc logo", theme = "bcgov.css", 
+        title = "text as wide as the logo", theme = "bcgov.css", 
         tabPanel(
-          "1 summary", 
+          "Table 1", 
           sidebarLayout(
             sidebarPanel(
-              helpText("help text1"),
+              width=2,
+              helpText("helptext1"),
+            ),    
+            mainPanel(
+              width=10,
+              #tableOutput("table")
+              DT::dataTableOutput("table1")
+            )
+          ),
+          bc_template_footer
+        ),
+        tabPanel(
+          "2 image", 
+          sidebarLayout(
+            sidebarPanel(
+              width = 2,
+              helpText("help text2"),
               img(src = "www/Ecoprovinces_Title.png", height = 1861*1/5, width = 1993*1/5),
             ),    
             mainPanel(
+              width = 10,
               #verbatimTextOutput("summary"),
             )
           ),
           bc_template_footer
-        ),        
-        tabPanel(
-          "2 table", 
-          sidebarLayout(
-            sidebarPanel(
-              helpText("helptext2"),
-              #img(src = "www/Ecoprovinces_Title.png", height = 1861*1/5, width = 1993*1/5),
-            ),    
-            mainPanel(
-              
-              #tableOutput("table")
-              DT::dataTableOutput("table1")
-              
-            )
-          ),
-          bc_template_footer
-        )
+        )        
       )
     )
   )

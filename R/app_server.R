@@ -17,6 +17,7 @@ app_server <- function(input, output, session) {
     library(stringr)
   })
   
+  
   Sys.setenv(TZ="America/Vancouver")
   BCGOV_DB <- Sys.getenv("BCGOV_DB")
   BCGOV_HOST <- Sys.getenv("BCGOV_HOST")
@@ -39,38 +40,79 @@ app_server <- function(input, output, session) {
   
   waiter_hide() # hide the waiter
   
-  x1 <- eventReactive(input$generate,{
-    message("event reactive x1")
+  selected <- eventReactive(input$generate,{
+    message("event reactive selected")
     z %>%
       dplyr::filter(date_added >= input$date_range[1] & 
                       date_added <= input$date_range[2] &
                       well_tag_number >= input$well_tag_number_range[1] &
                       well_tag_number <= input$well_tag_number_range[2])
   })
+
+  true_false_to_icon <- function(x){
+    dplyr::if_else(x == TRUE,
+                   as.character(icon("ok-sign", lib = "glyphicon")),
+                   as.character(icon("exclamation-sign", lib = "glyphicon"))
+    )
+  }
   
-  output$table1 <- DT::renderDataTable({
-    message("render datatable1")
-    table1 <- x1() %>% 
+  table1_title <- eventReactive(selected(),
+  {
+    paste0("table 1, from ", 
+           input$date_range[1], 
+           " to ", input$date_range[2], 
+           " and well tag number from 
+                        ",input$well_tag_number_range[1], 
+           " to ", input$well_tag_number_range[2])
+  })
+  
+  table1_data <- eventReactive(selected(),
+    {
+    message("generate table 1")
+    selected() %>% 
       dplyr::filter(table1_flag >0 ) %>%
       dplyr::arrange(dplyr::desc(table1_flag), dplyr::desc(well_tag_number)) %>%
       dplyr::select(
         well_tag_number,table1_flag,  my_well_type, table1_missing_lat_long_flag, 
         table1_table1_missing__wdip_flag, table1_missing_finished_well_depth_flag, 
-        table1_missing_person_responsible_flag, company_of_person_responsible) 
-    
-    table1 %>%  
-      head(100) %>% 
+        table1_missing_person_responsible_flag, company_of_person_responsible) %>%
+      #head(100) %>% 
       dplyr::select(
         well_tag_number,
-        problem_count = table1_flag, 
+        table1_flag, 
         my_well_type,
-        missing_lat_lon = table1_missing_lat_long_flag,
-        missing_finished_well_depth = table1_missing_finished_well_depth_flag,
-        missing_person_responsible =  table1_missing_person_responsible_flag,
-        company_of_person_responsible) %>% 
-      DT::datatable(caption =glue::glue("table 1, from {input$daterange3[1]} to {input$daterange3[2]}"))
+        table1_missing_lat_long_flag,
+        table1_table1_missing__wdip_flag,
+        table1_missing_finished_well_depth_flag,
+        table1_missing_person_responsible_flag,
+        company_of_person_responsible) %>%
+      mutate(
+        across(.cols = c("table1_missing_lat_long_flag", 
+                         "table1_table1_missing__wdip_flag", 
+                         "table1_missing_finished_well_depth_flag", 
+                         "table1_missing_person_responsible_flag"),
+               .fns = ~true_false_to_icon(!as.logical(.x))
+        )
+      )
   })
   
-  
+  output$table1 <- DT::renderDataTable({
+    message("render table 1")
+    table1_data() %>% 
+      DT::datatable(
+        colnames = c("well tag number",
+                     "problem count",
+                     "well type",
+                     "lat long",
+                     "wdip",
+                     "well depth",
+                     "person responsible",
+                     "company of person responsible"
+        ),
+        caption = table1_title(),
+        #caption = "TABLE 1 CAPTION",
+        rownames = FALSE, 
+        escape = FALSE)
+  })
 }
 
