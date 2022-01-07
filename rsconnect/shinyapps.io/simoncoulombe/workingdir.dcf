@@ -5,7 +5,7 @@ account: simoncoulombe
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 5322293
-bundleId: 5369292
+bundleId: 5442653
 url: https://simoncoulombe.shinyapps.io/workingdir/
-when: 1639447621.91337
-lastSyncTime: 1639447621.91338
+when: 1641531646.87404
+lastSyncTime: 1641531646.87406

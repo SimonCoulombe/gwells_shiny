@@ -35,9 +35,12 @@ app_server <- function(input, output, session) {
   
   z <- prepare_all_data(con1)
   
+  message("unhiding waiter")
+  
   waiter_hide() # hide the waiter
   
   x1 <- eventReactive(input$generate,{
+    message("event reactive x1")
     z %>%
       dplyr::filter(date_added >= input$date_range[1] & 
                       date_added <= input$date_range[2] &
@@ -46,6 +49,7 @@ app_server <- function(input, output, session) {
   })
   
   output$table1 <- DT::renderDataTable({
+    message("render datatable1")
     table1 <- x1() %>% 
       dplyr::filter(table1_flag >0 ) %>%
       dplyr::arrange(dplyr::desc(table1_flag), dplyr::desc(well_tag_number)) %>%
