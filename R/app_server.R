@@ -5,6 +5,7 @@
 #' @import shiny
 #' @noRd
 app_server <- function(input, output, session) {
+  Sys.setenv(TZ="America/Vancouver")
   
   waiter_show( # show the waiter
     html = spin_fading_circles() # use a spinner
@@ -17,8 +18,6 @@ app_server <- function(input, output, session) {
     library(stringr)
   })
   
-  
-  Sys.setenv(TZ="America/Vancouver")
   BCGOV_DB <- Sys.getenv("BCGOV_DB")
   BCGOV_HOST <- Sys.getenv("BCGOV_HOST")
   BCGOV_USR <- Sys.getenv("BCGOV_USR")
