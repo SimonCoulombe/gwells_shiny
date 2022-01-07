@@ -49,12 +49,7 @@ app_server <- function(input, output, session) {
                       well_tag_number <= input$well_tag_number_range[2])
   })
 
-  true_false_to_icon <- function(x){
-    dplyr::if_else(x == TRUE,
-                   as.character(icon("ok-sign", lib = "glyphicon")),
-                   as.character(icon("exclamation-sign", lib = "glyphicon"))
-    )
-  }
+
   
   table1_title <- eventReactive(selected(),
   {
@@ -91,7 +86,7 @@ app_server <- function(input, output, session) {
                          "table1_table1_missing__wdip_flag", 
                          "table1_missing_finished_well_depth_flag", 
                          "table1_missing_person_responsible_flag"),
-               .fns = ~true_false_to_icon(!as.logical(.x))
+               .fns = ~logical_to_character_icon(!as.logical(.x))
         )
       )
   })
