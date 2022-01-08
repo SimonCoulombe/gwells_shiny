@@ -17,14 +17,17 @@ mod_table1Output_ui <- function(id){
 #' table1Output Server Functions
 #'
 #' @noRd 
-#mod_table1Output_server <- function(id,df, date_added_min, date_added_max, wtn_min, wtn_max){
-mod_table1Output_server <- function(id,df){
+mod_table1Output_server <- function(id,df, date_added_min, date_added_max, wtn_min, wtn_max){
+#mod_table1Output_server <- function(id,df){
   stopifnot(is.reactive(df))
   # stopifnot(is.reactive(date_added_min))
   # stopifnot(is.reactive(date_added_max))
   # stopifnot(is.reactive(wtn_min))
   # stopifnot(is.reactive(wtn_max))
   moduleServer( id, function(input, output, session){
+    
+    
+    message("run  mod_table1Output_server")
     ns <- session$ns
     
     output$table1 <- DT::renderDataTable({
@@ -59,12 +62,12 @@ mod_table1Output_server <- function(id,df){
                        "problem count",
                        "well type",
                        "lat long",
-                       "wdip",
+                       "widp",
                        "well depth",
                        "person responsible",
                        "company of person responsible"
           ),
-          caption = "TABLE 1 CAPTION",
+          caption = paste0("Table 1 for date_added between ", date_added_min(), " and ", date_added_max(), " and well tag number between ", wtn_min(), " and ", wtn_max()),
           rownames = FALSE,
           escape = FALSE
         )

@@ -41,13 +41,13 @@ app_server <- function(input, output, session) {
   
   selected_data_and_ranges <- mod_filterDataInput_server("filterDataInput_ui_1",z)
   
+  message("class selected_data_and_ranges:",class(selected_data_and_ranges))
   mod_table1Output_server("table1Output_ui_1",
-                          df = selected_data_and_ranges
-                          # df = selected_data_and_ranges$selected,
-                          # date_added_min = selected_data_and_ranges$date_added_min,
-                          # date_added_max = selected_data_and_ranges$date_added_max,
-                          # wtn_min = selected_data_and_ranges$wtn_min,
-                          # wtn_max = selected_data_and_ranges$wtn_max
+                          df = selected_data_and_ranges$df,
+                           date_added_min = selected_data_and_ranges$date_added_min,
+                           date_added_max = selected_data_and_ranges$date_added_max,
+                           wtn_min = selected_data_and_ranges$wtn_min,
+                           wtn_max = selected_data_and_ranges$wtn_max
                           )
 }
 

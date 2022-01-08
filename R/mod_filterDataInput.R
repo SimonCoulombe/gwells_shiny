@@ -10,11 +10,11 @@
 mod_filterDataInputWTN_ui <- function(id){
   ns <- NS(id)
   
-    shinyWidgets::numericRangeInput(
-      inputId = ns("wtn_range"), 
-      label = "wtn_range",
-      value = c(1, 999999)
-    )
+  shinyWidgets::numericRangeInput(
+    inputId = ns("wtn_range"), 
+    label = "wtn_range",
+    value = c(1, 999999)
+  )
   
 }
 
@@ -30,14 +30,14 @@ mod_filterDataInputWTN_ui <- function(id){
 mod_filterDataInputDate_ui <- function(id){
   ns <- NS(id)
   
-    dateRangeInput(
-      inputId = ns("date_range"), 
-      label = "date_range",
-      start  =  Sys.Date()-13,
-      end    =  Sys.Date(),
-      min    = "2021-12-13",
-      max    = Sys.Date()
-    )
+  dateRangeInput(
+    inputId = ns("date_range"), 
+    label = "date_range",
+    start  =  Sys.Date()-13,
+    end    =  Sys.Date(),
+    min    = "2021-12-13",
+    max    = Sys.Date()
+  )
 }
 
 #' filterDataInputGenerate UI Function
@@ -51,40 +51,60 @@ mod_filterDataInputDate_ui <- function(id){
 #' @importFrom shiny NS tagList 
 mod_filterDataInputGenerate_ui <- function(id){
   ns <- NS(id)
-    actionButton(
-      inputId = ns("generate"), 
-      label = "Generate tables and figures")
+  actionButton(
+    inputId = ns("generate"), 
+    label = "Generate tables and figures")
 }
 
 #' filterDataInput Server Functions
 #'
 #' @noRd 
 mod_filterDataInput_server <- function(id,z){
+  stopifnot(!is.reactive(z)) # z ne doit pas être reactif, c'est le data de gwells.
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+    message("run  mod_filterDataInput_server")
     
-    return(
-      eventReactive(input$generate,{
-        z %>%
-          dplyr::filter(date_added >= input$date_range[1] &
-                          date_added <= input$date_range[2] &
-                          well_tag_number >= input$wtn_range[1] &
-                          well_tag_number <= input$wtn_range[2])
-        
-        
-        # list(selected = reactive(z %>%
-        #        dplyr::filter(date_added >= input$date_range[1] &
-        #                        date_added <= input$date_range[2] &
-        #                        well_tag_number >= input$wtn_range[1] &
-        #                        well_tag_number <= input$wtn_range[2])),
-        #      date_added_min = reactive(input$date_range[1]),
-        #      date_added_max = reactive(input$date_range[2]),
-        #      wtn_range_min = reactive(input$wtn_range[1]), 
-        #      wtn_range_max = reactive(input$wtn_range[2])
-        #      )
-      })
-    )
-    
+    #eventReactive(input$generate,{
+      # z %>%
+      #   dplyr::filter(date_added >= input$date_range[1] &
+      #                   date_added <= input$date_range[2] &
+      #                   well_tag_number >= input$wtn_range[1] &
+      #                   well_tag_number <= input$wtn_range[2])
+      
+      
+      return(
+        list(
+          df = reactive( 
+            z %>%
+              dplyr::filter(
+                date_added >= input$date_range[1] &
+                  date_added <= input$date_range[2] &
+                  well_tag_number >= input$wtn_range[1] &
+                  well_tag_number <= input$wtn_range[2])
+          ),
+               date_added_min = reactive(input$date_range[1]),
+               date_added_max = reactive(input$date_range[2]),
+               wtn_min = reactive(input$wtn_range[1]),
+               wtn_max = reactive(input$wtn_range[2])
+        )
+      )
+      
+      
+      
+      # list(selected = reactive(z %>%
+      #        dplyr::filter(date_added >= input$date_range[1] &
+      #                        date_added <= input$date_range[2] &
+      #                        well_tag_number >= input$wtn_range[1] &
+      #                        well_tag_number <= input$wtn_range[2])),
+      #      date_added_min = reactive(input$date_range[1]),
+      #      date_added_max = reactive(input$date_range[2]),
+      #      wtn_range_min = reactive(input$wtn_range[1]), 
+      #      wtn_range_max = reactive(input$wtn_range[2])
+      #      )
+   # })
+  
+  
   })
 }
 
