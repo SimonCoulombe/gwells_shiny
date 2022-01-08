@@ -1,4 +1,4 @@
-#' filterData UI Function
+#' filterDataInputWTN UI Function
 #'
 #' @description A shiny Module.
 #'
@@ -7,14 +7,29 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
-mod_filterData_ui <- function(id){
+mod_filterDataInputWTN_ui <- function(id){
   ns <- NS(id)
-  tagList(
+  
     shinyWidgets::numericRangeInput(
       inputId = ns("wtn_range"), 
       label = "wtn_range",
       value = c(1, 999999)
-    ),
+    )
+  
+}
+
+#' filterDataInputDate UI Function
+#'
+#' @description A shiny Module.
+#'
+#' @param id,input,output,session Internal parameters for {shiny}.
+#'
+#' @noRd 
+#'
+#' @importFrom shiny NS tagList 
+mod_filterDataInputDate_ui <- function(id){
+  ns <- NS(id)
+  
     dateRangeInput(
       inputId = ns("date_range"), 
       label = "date_range",
@@ -22,18 +37,29 @@ mod_filterData_ui <- function(id){
       end    =  Sys.Date(),
       min    = "2021-12-13",
       max    = Sys.Date()
-    ),
+    )
+}
+
+#' filterDataInputGenerate UI Function
+#'
+#' @description A shiny Module.
+#'
+#' @param id,input,output,session Internal parameters for {shiny}.
+#'
+#' @noRd 
+#'
+#' @importFrom shiny NS tagList 
+mod_filterDataInputGenerate_ui <- function(id){
+  ns <- NS(id)
     actionButton(
       inputId = ns("generate"), 
       label = "Generate tables and figures")
-    
-  )
 }
 
-#' filterData Server Functions
+#' filterDataInput Server Functions
 #'
 #' @noRd 
-mod_filterData_server <- function(id,z){
+mod_filterDataInput_server <- function(id,z){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
@@ -63,7 +89,7 @@ mod_filterData_server <- function(id,z){
 }
 
 ## To be copied in the UI
-# mod_filterData_ui("filterData_ui_1")
+# mod_filterDataInput_ui("filterDataInput_ui_1")
 
 ## To be copied in the server
-# mod_filterData_server("filterData_ui_1")
+# mod_filterDataInput_server("filterDataInput_ui_1")

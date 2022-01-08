@@ -19,26 +19,9 @@ app_ui <- function(request) {
               .glyphicon-flag, .glyphicon-trash {color:#28b728}"),
       
       fluidRow(
-        column(12,mod_filterData_ui("filterData_ui_1"))
-
-        
-        #         column(4,
-        #        shinyWidgets::numericRangeInput(
-        #          inputId = "well_tag_number_range", 
-        #          label = "Well tag number range:",
-        #          value = c(1, 999999)
-        #        )
-        # ),
-        # column(4,
-        #        dateRangeInput(
-        #          "date_range", "Date range:",
-        #          start  =  Sys.Date()-13,
-        #          end    =  Sys.Date(),
-        #          min    = "2021-12-13",
-        #          max    = Sys.Date()
-        #        )
-        # ),
-        # column(4, actionButton("generate", "Generate tables and figures"))
+        column(4,mod_filterDataInputWTN_ui("filterDataInput_ui_1")),
+        column(4,mod_filterDataInputDate_ui("filterDataInput_ui_1")),
+        column(4,mod_filterDataInputGenerate_ui("filterDataInput_ui_1"))
       ),
       navbarPage(
         title = "text as wide as the logo", theme = "bcgov.css", 

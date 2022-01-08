@@ -39,7 +39,7 @@ app_server <- function(input, output, session) {
   
   waiter_hide() # hide the waiter
   
-  selected_data_and_ranges <- mod_filterData_server("filterData_ui_1",z)
+  selected_data_and_ranges <- mod_filterDataInput_server("filterDataInput_ui_1",z)
   
   mod_table1Output_server("table1Output_ui_1",
                           df = selected_data_and_ranges
