@@ -40,7 +40,12 @@ app_server <- function(input, output, session) {
   waiter_hide() # hide the waiter
   
   
-  selected <- mod_filterData_server("filterData_ui_1",z )
+  selected <- mod_filterData_server("filterData_ui_1",z)
+  
+  output$table2 <- DT::renderDataTable({selected() %>% head() })
+  
+  selected_data_and_ranges <- mod_filterData_server("filterData_ui_1",z)
+  
 
   
   table1_title <- eventReactive(selected(),

@@ -36,17 +36,24 @@ mod_filterData_ui <- function(id){
 mod_filterData_server <- function(id,z){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-    reactive(
-      #get(
-        z %>%
-          dplyr::filter(date_added >= input$date_range[1] &
-                          date_added <= input$date_range[2] &
-                          well_tag_number >= input$wtn_range[1] &
-                          well_tag_number <= input$wtn_range[2])
-      #)
-    )
+    eventReactive(input$generate,{
+      z %>%
+        dplyr::filter(date_added >= input$date_range[1] &
+                        date_added <= input$date_range[2] &
+                        well_tag_number >= input$wtn_range[1] &
+                        well_tag_number <= input$wtn_range[2])
+      
+# 
+#       list(selected = z %>%
+#              dplyr::filter(date_added >= input$date_range[1] &
+#                              date_added <= input$date_range[2] &
+#                              well_tag_number >= input$wtn_range[1] &
+#                              well_tag_number <= input$wtn_range[2]),
+#            date_added_min = input$date_range[1], date_added_max = input$date_range[2],
+#            wtn_range_min = input$wtn_range[1], wtn_range_max = input$wtn_range[2])
+    })
     
-
+    
   })
 }
 

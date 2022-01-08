@@ -55,7 +55,21 @@ app_ui <- function(request) {
             )
           ),
           bc_template_footer
-        )        
+        ) ,     
+        tabPanel(
+          "test 1", 
+          sidebarLayout(
+            sidebarPanel(
+              width=2,
+              helpText("helptext2"),
+            ),    
+            mainPanel(
+              width=10,
+              DT::dataTableOutput("table2")
+            )
+          ),
+          bc_template_footer
+        )         
       )
     )
   )
