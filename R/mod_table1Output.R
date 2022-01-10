@@ -17,29 +17,28 @@ mod_table1Output_ui <- function(id){
 #' table1Output Server Functions
 #'
 #' @noRd 
-mod_table1Output_server <- function(id,df, date_added_min, date_added_max, wtn_min, wtn_max){
-#mod_table1Output_server <- function(id,df){
-  stopifnot(is.reactive(df))
-  # stopifnot(is.reactive(date_added_min))
-  # stopifnot(is.reactive(date_added_max))
-  # stopifnot(is.reactive(wtn_min))
-  # stopifnot(is.reactive(wtn_max))
+mod_table1Output_server <- function(id,d){
   moduleServer( id, function(input, output, session){
-    
     
     message("run  mod_table1Output_server")
     ns <- session$ns
     
     output$table1 <- DT::renderDataTable({
-      req(is.data.frame(df()))
-      df() %>% 
+      data <- d()
+      
+      df <- data$df
+      date_added_min <- data$date_added_min
+      date_added_max <- data$date_added_max
+      wtn_min <- data$wtn_min
+      wtn_max <- data$wtn_max
+      
+      df %>% 
         dplyr::filter(table1_flag >0 ) %>%
         dplyr::arrange(dplyr::desc(table1_flag), dplyr::desc(well_tag_number)) %>%
         dplyr::select(
           well_tag_number,table1_flag,  my_well_type, table1_missing_lat_long_flag, 
           table1_table1_missing__wdip_flag, table1_missing_finished_well_depth_flag, 
           table1_missing_person_responsible_flag, company_of_person_responsible) %>%
-        #head(100) %>% 
         dplyr::select(
           well_tag_number,
           table1_flag, 
@@ -67,7 +66,9 @@ mod_table1Output_server <- function(id,df, date_added_min, date_added_max, wtn_m
                        "person responsible",
                        "company of person responsible"
           ),
-          caption = paste0("Table 1 for date_added between ", date_added_min(), " and ", date_added_max(), " and well tag number between ", wtn_min(), " and ", wtn_max()),
+          caption = paste0("Table 1 for date_added between ",
+                           date_added_min, " and ", date_added_max,
+                           " and well tag number between ", wtn_min, " and ", wtn_max),
           rownames = FALSE,
           escape = FALSE
         )

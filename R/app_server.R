@@ -33,21 +33,16 @@ app_server <- function(input, output, session) {
     password=Sys.getenv("BCGOV_PWD")
   )
   
-  z <- prepare_all_data(con1)
+  prepared_gwells <- prepare_all_data(con1)
   
   message("unhiding waiter")
   
   waiter_hide() # hide the waiter
   
-  selected_data_and_ranges <- mod_filterDataInput_server("filterDataInput_ui_1",z)
-  
-  message("class selected_data_and_ranges:",class(selected_data_and_ranges))
-  mod_table1Output_server("table1Output_ui_1",
-                          df = selected_data_and_ranges$df,
-                           date_added_min = selected_data_and_ranges$date_added_min,
-                           date_added_max = selected_data_and_ranges$date_added_max,
-                           wtn_min = selected_data_and_ranges$wtn_min,
-                           wtn_max = selected_data_and_ranges$wtn_max
-                          )
+  data <- mod_filterDataInput_server("filterDataInput_ui_1",prepared_gwells)
+  mod_table1Output_server(
+    "table1Output_ui_1",
+    d = data
+  )
 }
 

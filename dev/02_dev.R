@@ -44,14 +44,15 @@ usethis::use_package( "gt" )
 usethis::use_package( "glue" )
 usethis::use_package( "shinyWidgets" ) # for numeric range input
 usethis::use_package( "waiter" ) # for loading screen
+usethis::use_package( "readr" ) # for loading screen
 
 # devtools::install() ## simon 
 # renv::snapshot(type = "explicit") # simon
 
 ## Add modules ----
 ## Create a module infrastructure in R/
-golem::add_module( name = "name_of_module1" ) # Name of the module
-golem::add_module( name = "name_of_module2" ) # Name of the module
+golem::add_module( name = "filterDataInput" ) # Name of the module
+golem::add_module( name = "table1Output" ) # Name of the module
 
 ## Add helper functions ----
 ## Creates fct_* and utils_*

@@ -15,7 +15,6 @@ mod_filterDataInputWTN_ui <- function(id){
     label = "wtn_range",
     value = c(1, 999999)
   )
-  
 }
 
 #' filterDataInputDate UI Function
@@ -59,57 +58,30 @@ mod_filterDataInputGenerate_ui <- function(id){
 #' filterDataInput Server Functions
 #'
 #' @noRd 
-mod_filterDataInput_server <- function(id,z){
-  stopifnot(!is.reactive(z)) # z ne doit pas être reactif, c'est le data de gwells.
+mod_filterDataInput_server <- function(id,df){
+  stopifnot(!is.reactive(df)) # z ne doit pas être reactif, c'est le data de gwells.
   moduleServer( id, function(input, output, session){
-    ns <- session$ns
     message("run  mod_filterDataInput_server")
-    
-    #eventReactive(input$generate,{
-      # z %>%
-      #   dplyr::filter(date_added >= input$date_range[1] &
-      #                   date_added <= input$date_range[2] &
-      #                   well_tag_number >= input$wtn_range[1] &
-      #                   well_tag_number <= input$wtn_range[2])
-      
-      
-      return(
-        list(
-          df = reactive( 
-            z %>%
-              dplyr::filter(
-                date_added >= input$date_range[1] &
-                  date_added <= input$date_range[2] &
-                  well_tag_number >= input$wtn_range[1] &
-                  well_tag_number <= input$wtn_range[2])
-          ),
-               date_added_min = reactive(input$date_range[1]),
-               date_added_max = reactive(input$date_range[2]),
-               wtn_min = reactive(input$wtn_range[1]),
-               wtn_max = reactive(input$wtn_range[2])
-        )
+    ns <- session$ns
+    eventReactive(input$generate,{
+      list(
+        df = df %>%
+          dplyr::filter(
+            date_added >= input$date_range[1] &
+              date_added <= input$date_range[2] &
+              well_tag_number >= input$wtn_range[1] &
+              well_tag_number <= input$wtn_range[2]),
+        date_added_min = input$date_range[1],
+        date_added_max = input$date_range[2],
+        wtn_min = input$wtn_range[1],
+        wtn_max = input$wtn_range[2]
       )
-      
-      
-      
-      # list(selected = reactive(z %>%
-      #        dplyr::filter(date_added >= input$date_range[1] &
-      #                        date_added <= input$date_range[2] &
-      #                        well_tag_number >= input$wtn_range[1] &
-      #                        well_tag_number <= input$wtn_range[2])),
-      #      date_added_min = reactive(input$date_range[1]),
-      #      date_added_max = reactive(input$date_range[2]),
-      #      wtn_range_min = reactive(input$wtn_range[1]), 
-      #      wtn_range_max = reactive(input$wtn_range[2])
-      #      )
-   # })
-  
-  
+    })
   })
 }
 
 ## To be copied in the UI
-# mod_filterDataInput_ui("filterDataInput_ui_1")
+# mod_filterDataInput_ui("filterDataInput_ui_1")#
 
 ## To be copied in the server
 # mod_filterDataInput_server("filterDataInput_ui_1")

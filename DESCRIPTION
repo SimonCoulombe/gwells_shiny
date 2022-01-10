@@ -28,6 +28,7 @@ Imports:
     pool,
     processx,
     profvis,
+    readr,
     renv,
     RPostgres,
     sf,
