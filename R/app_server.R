@@ -1,4 +1,4 @@
-#' The application server-side
+' The application server-side
 #' 
 #' @param input,output,session Internal parameters for {shiny}. 
 #'     DO NOT REMOVE.
@@ -7,15 +7,17 @@
 app_server <- function(input, output, session) {
   Sys.setenv(TZ="America/Vancouver")
   
-  waiter_show( # show the waiter
-    html = spin_fading_circles() # use a spinner
-  )
-  
   suppressPackageStartupMessages({
     library(DBI)
     library(RPostgres)
     library(dplyr)
     library(stringr)
+    library(waiter)
+    
+    waiter_show( # show the waiter
+      html = spin_fading_circles() # use a spinner
+    )
+    
   })
   
   BCGOV_DB <- Sys.getenv("BCGOV_DB")
@@ -45,4 +47,3 @@ app_server <- function(input, output, session) {
     d = data
   )
 }
-

@@ -11,7 +11,7 @@ app_ui <- function(request) {
     
     #fluidpage de exemple
     fluidPage(
-      useWaiter(),
+      waiter::useWaiter(),
       
       tags$style(".glyphicon-ok-sign {color:#2b8ee5}
               .glyphicon-question-sign {color:#f4e107}
@@ -68,4 +68,3 @@ golem_add_external_resources <- function(){
     # for example, you can add shinyalert::useShinyalert() 
   )
 }
-
