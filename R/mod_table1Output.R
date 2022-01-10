@@ -10,7 +10,7 @@
 mod_table1Output_ui <- function(id){
   ns <- NS(id)
   tagList(
-    DT::dataTableOutput(ns("table1"))
+    DT::dataTableOutput(ns("table"))
   )
 }
 
@@ -23,7 +23,7 @@ mod_table1Output_server <- function(id,d){
     message("run  mod_table1Output_server")
     ns <- session$ns
     
-    output$table1 <- DT::renderDataTable({
+    output$table <- DT::renderDataTable({
       data <- d()
       
       df <- data$df
@@ -38,16 +38,7 @@ mod_table1Output_server <- function(id,d){
         dplyr::select(
           well_tag_number,table1_flag,  my_well_type, table1_missing_lat_long_flag, 
           table1_table1_missing__wdip_flag, table1_missing_finished_well_depth_flag, 
-          table1_missing_person_responsible_flag, company_of_person_responsible) %>%
-        dplyr::select(
-          well_tag_number,
-          table1_flag, 
-          my_well_type,
-          table1_missing_lat_long_flag,
-          table1_table1_missing__wdip_flag,
-          table1_missing_finished_well_depth_flag,
-          table1_missing_person_responsible_flag,
-          company_of_person_responsible) %>%
+          table1_missing_person_responsible_flag, company_of_person_responsible, date_added) %>%
         mutate(
           across(.cols = c("table1_missing_lat_long_flag", 
                            "table1_table1_missing__wdip_flag", 
@@ -64,7 +55,8 @@ mod_table1Output_server <- function(id,d){
                        "widp",
                        "well depth",
                        "person responsible",
-                       "company of person responsible"
+                       "company of person responsible",
+                       "date added"
           ),
           caption = paste0("Table 1 for date_added between ",
                            date_added_min, " and ", date_added_max,

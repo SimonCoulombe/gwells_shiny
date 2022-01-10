@@ -26,53 +26,24 @@ prepare_all_data <- function(connection){
     dplyr::left_join(qa %>% dplyr::select(-dplyr::all_of(colnames_in_more_than_one_db))) # %>%
 
   message("done joining")
+  
+  # the shinyapps.io free plan  is short  on memory, let's help us to stay within limits by erasing tables and running garbade control
   rm(wells)
   rm(geocode)
   rm(qa)
   gc()
   
-  getAvailMem <- function(format = TRUE) {
-    
-    gc()
-    
-    if (Sys.info()[["sysname"]] == "Windows") {
-      memfree <- 1024^2 * (utils::memory.limit() - utils::memory.size())
-    } else {
-      # http://stackoverflow.com/a/6457769/6103040
-      memfree <- 1024 * as.numeric(
-        system("awk '/MemFree/ {print $2}' /proc/meminfo", intern = TRUE))
-    }
-    
-    `if`(format, format(structure(memfree, class = "object_size"),
-                        units = "auto"), memfree)
-  }
-  message(getAvailMem())
-  
-  interesting_columns <- c("well_tag_number", "identification_plate_number", 
-                           "date_added", "date_geocoded", "date_qa",
-                           "construction_start_date", "construction_end_date",    
-                           "decommission_start_date", "decommission_end_date", 
-                           "alteration_start_date", "alteration_end_date",
-                           "longitude_decdeg", "latitude_decdeg", 
-                           "well_class_code", "well_subclass",
-                           "intended_water_use_code",
-                           "finished_well_depth_ft_bgl" , "person_responsible", "company_of_person_responsible",
-                           "artesian_conditions", "comments",
-                           "nr_region_name")
-  
+  message("available memory:", getAvailMem())
   
   z <- full_data %>%
     dplyr::mutate(
       cross_referenced = tidyr::replace_na(stringr::str_detect(toupper(comments), "X REF|XREF|X-REF|CROSS REF|CROSSREF|CROSS-REF"), FALSE),
-      
       max_date = pmax(dplyr::coalesce(construction_start_date, construction_end_date, alteration_start_date, alteration_end_date, decommission_start_date, decommission_end_date)),
       worktype = factor(dplyr::case_when(
         decommission_start_date == max_date | decommission_end_date == max_date ~ "decommission",
         alteration_start_date == max_date | alteration_end_date == max_date ~ "alteration",
         construction_start_date == max_date | construction_end_date == max_date ~ "construction",
         TRUE ~ "no date"
-        
-        
       ), levels = c("construction", "alteration", "decommission", "no date")
       ),
       old_or_unknown_date = max_date < lubridate::ymd("20160301") | is.na(max_date), 
@@ -105,9 +76,7 @@ prepare_all_data <- function(connection){
         is.na(person_responsible)  ~ TRUE,
         !is.na(person_responsible)  ~ FALSE
       ),
-      
       table1_flag = table1_missing_lat_long_flag + table1_table1_missing__wdip_flag + table1_missing_finished_well_depth_flag + table1_missing_person_responsible_flag,
-      
       table2_flag = dplyr::case_when(
         distance_to_matching_pid >400 ~ TRUE,
         0< score_address & score_address < 80 ~ TRUE,
@@ -129,7 +98,6 @@ prepare_all_data <- function(connection){
         factor(dplyr::if_else(well_class_code == "WATR_SPPLY", intended_water_use_code, "SPECIALIZED"), 
                levels = c("DOM", "UNK","DWS","COM","IRR","OTHER","TST","OBS","OP_LP_GEO", "SPECIALIZED")
         )
-      
     )%>%
     dplyr::mutate(
       fct_well_class_code = factor(well_class_code, levels = c("WATR_SPPLY", "UNK", "MONITOR", "DEW_DRA", "CLS_LP_GEO" ,"GEOTECH" ,"REMEDIATE" ,"INJECTION", "RECHARGE"))

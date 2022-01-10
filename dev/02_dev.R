@@ -45,6 +45,10 @@ usethis::use_package( "glue" )
 usethis::use_package( "shinyWidgets" ) # for numeric range input
 usethis::use_package( "waiter" ) # for loading screen
 usethis::use_package( "readr" ) # for loading screen
+usethis::use_package( "bcmaps" ) # for loading screen
+usethis::use_package( "sf" ) # for loading screen
+usethis::use_package( "leaflet" ) # for loading screen
+usethis::use_package( "mapview" )
 
 # devtools::install() ## simon 
 # renv::snapshot(type = "explicit") # simon
@@ -53,6 +57,13 @@ usethis::use_package( "readr" ) # for loading screen
 ## Create a module infrastructure in R/
 golem::add_module( name = "filterDataInput" ) # Name of the module
 golem::add_module( name = "table1Output" ) # Name of the module
+golem::add_module( name = "table2Output" ) # Name of the module
+golem::add_module( name = "table3Output" ) # Name of the module
+golem::add_module( name = "figure1Output" ) # Name of the module
+golem::add_module( name = "map1Output" )
+golem::add_module( name = "summaryTable1Output" )
+golem::add_module( name = "summaryTable2Output" )
+golem::add_module( name = "summaryTable3Output" )
 
 ## Add helper functions ----
 ## Creates fct_* and utils_*
