@@ -1,4 +1,4 @@
-#' The application server-side
+' The application server-side
 #' 
 #' @param input,output,session Internal parameters for {shiny}. 
 #'     DO NOT REMOVE.
@@ -6,23 +6,28 @@
 #' @noRd
 app_server <- function(input, output, session) {
   Sys.setenv(TZ="America/Vancouver")
-  
-  waiter_show( # show the waiter
-    html = spin_fading_circles() # use a spinner
-  )
-  
   suppressPackageStartupMessages({
+    library(shiny)
     library(DBI)
     library(RPostgres)
     library(dplyr)
     library(stringr)
+    library(waiter)
+    library(ggplot2)
+    library(leaflet)
+    library(mapview)
+    library(sf)
+    library(bcmaps)
+    library(tidyr)
+    library(gt)
   })
-  
+  # get the data from CSV (or SQL if this ever get implemented)
+  waiter_show(html = spin_fading_circles())  
   BCGOV_DB <- Sys.getenv("BCGOV_DB")
   BCGOV_HOST <- Sys.getenv("BCGOV_HOST")
   BCGOV_USR <- Sys.getenv("BCGOV_USR")
   BCGOV_PWD <- Sys.getenv("BCGOV_PWD")
-  if (is.null(BCGOV_DB) || is.null(BCGOV_HOST)|| is.null(BCGOV_USR) || is.null(BCGOV_PWD)) stop("go away")
+  if (is.null(BCGOV_DB) || is.null(BCGOV_HOST)|| is.null(BCGOV_USR) || is.null(BCGOV_PWD)) stop("go away -- set up sql access as environment variables BCGOV_DB, BCGOV_HOST, BCGOV_USR, BCGOV_PWD")
   
   con1 <- DBI::dbConnect(
     #RPostgreSQL::PostgreSQL(),
@@ -33,80 +38,24 @@ app_server <- function(input, output, session) {
     password=Sys.getenv("BCGOV_PWD")
   )
   
-  z <- prepare_all_data(con1)
+  # get data from the 3 tables, left join it, create some flags etc..
+  prepared_gwells <- prepare_all_data(con1)
   
+  #ok we are ready to roll!  
   message("unhiding waiter")
-  
   waiter_hide() # hide the waiter
   
-  selected <- eventReactive(input$generate,{
-    message("event reactive selected")
-    z %>%
-      dplyr::filter(date_added >= input$date_range[1] & 
-                      date_added <= input$date_range[2] &
-                      well_tag_number >= input$well_tag_number_range[1] &
-                      well_tag_number <= input$well_tag_number_range[2])
-  })
-
-
   
-  table1_title <- eventReactive(selected(),
-  {
-    paste0("table 1, from ", 
-           input$date_range[1], 
-           " to ", input$date_range[2], 
-           " and well tag number from 
-                        ",input$well_tag_number_range[1], 
-           " to ", input$well_tag_number_range[2])
-  })
+  # the gwells data is filtered according to whatever filters the user select 
+  data <- mod_filterDataInput_server("filterDataInput_ui_1",prepared_gwells)
   
-  table1_data <- eventReactive(selected(),
-    {
-    message("generate table 1")
-    selected() %>% 
-      dplyr::filter(table1_flag >0 ) %>%
-      dplyr::arrange(dplyr::desc(table1_flag), dplyr::desc(well_tag_number)) %>%
-      dplyr::select(
-        well_tag_number,table1_flag,  my_well_type, table1_missing_lat_long_flag, 
-        table1_table1_missing__wdip_flag, table1_missing_finished_well_depth_flag, 
-        table1_missing_person_responsible_flag, company_of_person_responsible) %>%
-      #head(100) %>% 
-      dplyr::select(
-        well_tag_number,
-        table1_flag, 
-        my_well_type,
-        table1_missing_lat_long_flag,
-        table1_table1_missing__wdip_flag,
-        table1_missing_finished_well_depth_flag,
-        table1_missing_person_responsible_flag,
-        company_of_person_responsible) %>%
-      mutate(
-        across(.cols = c("table1_missing_lat_long_flag", 
-                         "table1_table1_missing__wdip_flag", 
-                         "table1_missing_finished_well_depth_flag", 
-                         "table1_missing_person_responsible_flag"),
-               .fns = ~logical_to_character_icon(!as.logical(.x))
-        )
-      )
-  })
-  
-  output$table1 <- DT::renderDataTable({
-    message("render table 1")
-    table1_data() %>% 
-      DT::datatable(
-        colnames = c("well tag number",
-                     "problem count",
-                     "well type",
-                     "lat long",
-                     "wdip",
-                     "well depth",
-                     "person responsible",
-                     "company of person responsible"
-        ),
-        caption = table1_title(),
-        #caption = "TABLE 1 CAPTION",
-        rownames = FALSE, 
-        escape = FALSE)
-  })
+  # Table 1 is generated from the filtered data
+  mod_table1Output_server("table1Output_ui_1", d = data)
+  mod_table2Output_server("table2Output_ui_1", d = data)
+  mod_table3Output_server("table3Output_ui_1", d = data)
+  mod_figure1Output_server("figure1Output_ui_1", d = data)
+  mod_map1Output_server("map1Output_ui_1", d = data)
+  mod_summaryTable1Output_server("summaryTable1Output_ui_1", d = data)
+  mod_summaryTable2Output_server("summaryTable2Output_ui_1", d = data)
+  mod_summaryTable3Output_server("summaryTable3Output_ui_1", d = data)
 }
-
